@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 
 const PREVIEWABLE = new Set(["html", "htm"]);
 
@@ -34,7 +33,6 @@ export default function AdminPage() {
   const [selectedFilePath, setSelectedFilePath] = useState(null);
   const [previewHtml, setPreviewHtml] = useState(null);
   const [previewLoading, setPreviewLoading] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     load();
@@ -44,10 +42,6 @@ export default function AdminPage() {
     setError("");
     try {
       const res = await fetch("/api/admin/submissions", { cache: "no-store" });
-      if (res.status === 401) {
-        router.push("/admin/login");
-        return;
-      }
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || "Couldn't load submissions.");
@@ -60,11 +54,6 @@ export default function AdminPage() {
     } catch {
       setError("Couldn't reach the server.");
     }
-  }
-
-  async function handleLogout() {
-    await fetch("/api/admin/login", { method: "DELETE" });
-    router.push("/admin/login");
   }
 
   const selected = useMemo(
@@ -109,9 +98,6 @@ export default function AdminPage() {
           <a href="/" style={styles.link}>
             Upload page
           </a>
-          <button type="button" onClick={handleLogout} style={styles.logoutButton}>
-            Sign out
-          </button>
         </div>
       </header>
 
@@ -235,16 +221,6 @@ const styles = {
     fontSize: 13.5,
     color: "var(--ink-soft)",
     textDecoration: "none",
-  },
-  logoutButton: {
-    padding: "7px 12px",
-    fontSize: 13,
-    fontWeight: 600,
-    border: "1px solid var(--line)",
-    borderRadius: "var(--radius)",
-    background: "var(--surface)",
-    color: "var(--ink)",
-    cursor: "pointer",
   },
   error: {
     color: "var(--error)",
