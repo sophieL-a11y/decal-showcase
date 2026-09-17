@@ -117,9 +117,9 @@ export default function AdminPage() {
 
       {error && <p style={styles.error}>{error}</p>}
 
-      {submissions === null && !error ? (
+      {error ? null : submissions === null ? (
         <p style={styles.muted}>Loading…</p>
-      ) : submissions && submissions.length === 0 ? (
+      ) : submissions.length === 0 ? (
         <p style={styles.muted}>No submissions yet.</p>
       ) : (
         <div style={styles.layout}>
